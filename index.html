@@ -2,16 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <title>Gastos</title>
 
@@ -29,8 +22,8 @@
 
     .app {
       width: 100%;
-      max-width: 650px;
-      margin: auto;
+      max-width: 600px;
+      margin: 0 auto;
       padding: 22px;
     }
 
@@ -40,7 +33,7 @@
     }
 
     .tarjeta {
-      background: white;
+      background: #fff;
       border-radius: 18px;
       padding: 22px;
       margin-bottom: 18px;
@@ -60,16 +53,13 @@
     select {
       display: block;
       width: 100%;
-      min-height: 58px;
+      min-height: 56px;
       margin-bottom: 13px;
       padding: 0 15px;
-
       border: 1px solid #d8d8d8;
       border-radius: 12px;
-
-      background: white;
+      background: #fff;
       color: #222;
-
       font-family: Arial, Helvetica, sans-serif;
       font-size: 17px;
     }
@@ -80,29 +70,27 @@
     }
 
     input[type="date"] {
-      min-height: 58px;
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 56px;
       color: #222;
-      background: white;
+      background: #fff;
     }
 
     button {
       width: 100%;
       min-height: 58px;
-
       border: 0;
       border-radius: 12px;
-
       padding: 14px;
-
       font-size: 18px;
       font-weight: bold;
-
       cursor: pointer;
     }
 
     #guardar {
       background: #222;
-      color: white;
+      color: #fff;
     }
 
     #guardar:disabled {
@@ -110,22 +98,21 @@
     }
 
     .imprimir {
-      background: #666;
-      color: white;
+      background: #686868;
+      color: #fff;
       margin-bottom: 28px;
     }
 
     .estado {
       min-height: 22px;
-      margin: 5px 0 15px;
-
       text-align: center;
-      font-size: 15px;
+      font-size: 14px;
       color: #666;
+      margin: 4px 0 15px;
     }
 
     .estado.ok {
-      color: #15803d;
+      color: #197039;
       font-weight: bold;
     }
 
@@ -135,23 +122,19 @@
     }
 
     h2.seccion {
-      font-size: 26px;
+      font-size: 25px;
       margin: 10px 0 16px;
     }
 
     .gasto {
+      background: #fff;
+      border-radius: 13px;
+      padding: 16px;
+      margin-bottom: 9px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-
       gap: 15px;
-
-      background: white;
-
-      border-radius: 13px;
-
-      padding: 16px;
-      margin-bottom: 9px;
     }
 
     .categoria {
@@ -166,29 +149,25 @@
 
     .info {
       margin-top: 6px;
-
       color: #777;
       font-size: 14px;
     }
 
     .importe {
-      white-space: nowrap;
-
       font-size: 18px;
       font-weight: bold;
+      white-space: nowrap;
     }
 
     .vacio {
       text-align: center;
       color: #888;
-
       padding: 30px 10px;
     }
 
     @media print {
-
       body {
-        background: white;
+        background: #fff;
       }
 
       .formulario,
@@ -202,13 +181,9 @@
         padding: 0;
       }
 
-      .gasto,
-      .tarjeta {
-        border: 1px solid #ddd;
-      }
-
+      .tarjeta,
       .gasto {
-        break-inside: avoid;
+        border: 1px solid #ddd;
       }
     }
   </style>
@@ -220,17 +195,12 @@
 
   <h1>Gastos</h1>
 
-
   <div class="tarjeta">
-
     <div class="titulo-total">
       Gastado este mes
     </div>
 
-    <h2 id="total">
-      $0
-    </h2>
-
+    <h2 id="total">$0</h2>
   </div>
 
 
@@ -245,49 +215,21 @@
       placeholder="$ Monto"
     >
 
-
     <input
       id="fecha"
       type="date"
     >
 
-
     <select id="categoria">
-
-      <option value="Supermercado">
-        Supermercado
-      </option>
-
-      <option value="Comida">
-        Comida
-      </option>
-
-      <option value="Combustible">
-        Combustible
-      </option>
-
-      <option value="Chicos">
-        Chicos
-      </option>
-
-      <option value="Salidas">
-        Salidas
-      </option>
-
-      <option value="Compras">
-        Compras
-      </option>
-
-      <option value="Casa">
-        Casa
-      </option>
-
-      <option value="Otros">
-        Otros
-      </option>
-
+      <option value="Supermercado">Supermercado</option>
+      <option value="Comida">Comida</option>
+      <option value="Combustible">Combustible</option>
+      <option value="Chicos">Chicos</option>
+      <option value="Salidas">Salidas</option>
+      <option value="Compras">Compras</option>
+      <option value="Casa">Casa</option>
+      <option value="Otros">Otros</option>
     </select>
-
 
     <input
       id="detalle"
@@ -295,19 +237,10 @@
       placeholder="Detalle (opcional)"
     >
 
-
     <select id="persona">
-
-      <option value="Nico">
-        Nico
-      </option>
-
-      <option value="Mica">
-        Mica
-      </option>
-
+      <option value="Nico">Nico</option>
+      <option value="Mica">Mica</option>
     </select>
-
 
     <button
       id="guardar"
@@ -338,7 +271,6 @@
     Últimos gastos
   </h2>
 
-
   <div id="lista"></div>
 
 </div>
@@ -346,16 +278,28 @@
 
 <script>
 
-var SUPABASE_URL =
+const SUPABASE_URL =
   "https://jzguybdxiilpglyiqzqq.supabase.co";
 
-var SUPABASE_KEY =
+const SUPABASE_KEY =
   "sb_publishable_znJR0UdAV3tuY4pW-oILXw_XRN9_-vI";
+
+
+function headers(extra) {
+
+  return Object.assign(
+    {
+      "apikey": SUPABASE_KEY,
+      "Accept": "application/json"
+    },
+    extra || {}
+  );
+}
 
 
 function ponerEstado(texto, tipo) {
 
-  var elemento =
+  const elemento =
     document.getElementById("estado");
 
   elemento.textContent =
@@ -364,34 +308,28 @@ function ponerEstado(texto, tipo) {
   elemento.className =
     "estado";
 
-  if (tipo === "ok") {
-    elemento.className =
-      "estado ok";
-  }
-
-  if (tipo === "error") {
-    elemento.className =
-      "estado error";
+  if (tipo) {
+    elemento.classList.add(tipo);
   }
 }
 
 
 function fechaHoy() {
 
-  var ahora =
+  const fecha =
     new Date();
 
-  var anio =
-    ahora.getFullYear();
+  const anio =
+    fecha.getFullYear();
 
-  var mes =
+  const mes =
     String(
-      ahora.getMonth() + 1
+      fecha.getMonth() + 1
     ).padStart(2, "0");
 
-  var dia =
+  const dia =
     String(
-      ahora.getDate()
+      fecha.getDate()
     ).padStart(2, "0");
 
   return (
@@ -404,17 +342,17 @@ function fechaHoy() {
 }
 
 
-function inicioMesActual() {
+function inicioMes() {
 
-  var ahora =
+  const fecha =
     new Date();
 
-  var anio =
-    ahora.getFullYear();
+  const anio =
+    fecha.getFullYear();
 
-  var mes =
+  const mes =
     String(
-      ahora.getMonth() + 1
+      fecha.getMonth() + 1
     ).padStart(2, "0");
 
   return (
@@ -428,22 +366,22 @@ function inicioMesActual() {
 
 function inicioMesSiguiente() {
 
-  var ahora =
+  const ahora =
     new Date();
 
-  var siguiente =
+  const fecha =
     new Date(
       ahora.getFullYear(),
       ahora.getMonth() + 1,
       1
     );
 
-  var anio =
-    siguiente.getFullYear();
+  const anio =
+    fecha.getFullYear();
 
-  var mes =
+  const mes =
     String(
-      siguiente.getMonth() + 1
+      fecha.getMonth() + 1
     ).padStart(2, "0");
 
   return (
@@ -468,34 +406,24 @@ function dinero(valor) {
 }
 
 
-function urlBaseGastos() {
-
-  return (
-    SUPABASE_URL +
-    "/rest/v1/gastos?apikey=" +
-    encodeURIComponent(
-      SUPABASE_KEY
-    )
-  );
-}
-
-
 async function cargarGastos() {
 
   ponerEstado(
     "Actualizando gastos..."
   );
 
-  var desde =
-    inicioMesActual();
 
-  var hasta =
+  const desde =
+    inicioMes();
+
+  const hasta =
     inicioMesSiguiente();
 
 
-  var url =
-    urlBaseGastos() +
-    "&select=*" +
+  const url =
+    SUPABASE_URL +
+    "/rest/v1/gastos" +
+    "?select=*" +
     "&fecha=gte." +
     encodeURIComponent(desde) +
     "&fecha=lt." +
@@ -505,27 +433,33 @@ async function cargarGastos() {
 
   try {
 
-    var respuesta =
+    const respuesta =
       await fetch(
         url,
         {
           method: "GET",
-          mode: "cors",
-          cache: "no-store"
+
+          headers:
+            headers(),
+
+          cache:
+            "no-store"
         }
       );
 
 
     if (!respuesta.ok) {
 
-      var errorTexto =
+      const error =
         await respuesta.text();
 
+
       console.error(
-        "Supabase GET",
+        "ERROR GET:",
         respuesta.status,
-        errorTexto
+        error
       );
+
 
       ponerEstado(
         "Error al cargar: " +
@@ -533,11 +467,12 @@ async function cargarGastos() {
         "error"
       );
 
+
       return;
     }
 
 
-    var gastos =
+    const gastos =
       await respuesta.json();
 
 
@@ -549,12 +484,14 @@ async function cargarGastos() {
     ponerEstado("");
 
   }
+
   catch (error) {
 
     console.error(
-      "Error GET:",
+      "ERROR CONEXION GET:",
       error
     );
+
 
     ponerEstado(
       "Error de conexión al cargar",
@@ -566,11 +503,13 @@ async function cargarGastos() {
 
 async function guardarGasto() {
 
-  var boton =
-    document.getElementById("guardar");
+  const boton =
+    document.getElementById(
+      "guardar"
+    );
 
 
-  var monto =
+  const monto =
     Number(
       document.getElementById(
         "monto"
@@ -578,32 +517,32 @@ async function guardarGasto() {
     );
 
 
-  var fecha =
+  const fecha =
     document.getElementById(
       "fecha"
     ).value;
 
 
-  var categoria =
+  const categoria =
     document.getElementById(
       "categoria"
     ).value;
 
 
-  var detalle =
+  const detalle =
     document.getElementById(
       "detalle"
     ).value.trim();
 
 
-  var persona =
+  const persona =
     document.getElementById(
       "persona"
     ).value;
 
 
   if (
-    !monto ||
+    !Number.isFinite(monto) ||
     monto <= 0
   ) {
 
@@ -625,25 +564,30 @@ async function guardarGasto() {
   }
 
 
-  var gasto = {
+  const nuevoGasto = {
 
-    fecha: fecha,
+    fecha:
+      fecha,
 
-    monto: monto,
+    monto:
+      monto,
 
-    categoria: categoria,
+    categoria:
+      categoria,
 
     detalle:
       detalle === ""
-      ? null
-      : detalle,
+        ? null
+        : detalle,
 
-    persona: persona
+    persona:
+      persona
   };
 
 
   boton.disabled =
     true;
+
 
   boton.textContent =
     "Guardando...";
@@ -656,29 +600,29 @@ async function guardarGasto() {
 
   try {
 
-    var url =
-      urlBaseGastos();
-
-
-    var respuesta =
+    const respuesta =
       await fetch(
-        url,
+        SUPABASE_URL +
+        "/rest/v1/gastos",
+
         {
-          method: "POST",
+          method:
+            "POST",
 
-          mode: "cors",
+          headers:
+            headers(
+              {
+                "Content-Type":
+                  "application/json",
 
-          headers: {
-            "Content-Type":
-              "application/json",
-
-            "Prefer":
-              "return=minimal"
-          },
+                "Prefer":
+                  "return=representation"
+              }
+            ),
 
           body:
             JSON.stringify(
-              gasto
+              nuevoGasto
             )
         }
       );
@@ -686,14 +630,14 @@ async function guardarGasto() {
 
     if (!respuesta.ok) {
 
-      var errorTexto =
+      const error =
         await respuesta.text();
 
 
       console.error(
-        "Supabase POST",
+        "ERROR POST:",
         respuesta.status,
-        errorTexto
+        error
       );
 
 
@@ -716,12 +660,14 @@ async function guardarGasto() {
 
     document.getElementById(
       "monto"
-    ).value = "";
+    ).value =
+      "";
 
 
     document.getElementById(
       "detalle"
-    ).value = "";
+    ).value =
+      "";
 
 
     document.getElementById(
@@ -730,19 +676,20 @@ async function guardarGasto() {
       fechaHoy();
 
 
+    await cargarGastos();
+
+
     ponerEstado(
       "Gasto guardado correctamente",
       "ok"
     );
 
-
-    await cargarGastos();
-
   }
+
   catch (error) {
 
     console.error(
-      "Error POST:",
+      "ERROR CONEXION POST:",
       error
     );
 
@@ -758,10 +705,12 @@ async function guardarGasto() {
     );
 
   }
+
   finally {
 
     boton.disabled =
       false;
+
 
     boton.textContent =
       "Guardar gasto";
@@ -771,7 +720,7 @@ async function guardarGasto() {
 
 function mostrarGastos(gastos) {
 
-  var lista =
+  const lista =
     document.getElementById(
       "lista"
     );
@@ -781,12 +730,8 @@ function mostrarGastos(gastos) {
     "";
 
 
-  var total =
-    0;
-
-
   if (
-    !gastos ||
+    !Array.isArray(gastos) ||
     gastos.length === 0
   ) {
 
@@ -797,155 +742,154 @@ function mostrarGastos(gastos) {
 
 
     lista.innerHTML =
-      '<div class="vacio">Todavía no hay gastos cargados este mes.</div>';
+      '<div class="vacio">' +
+      'Todavía no hay gastos cargados este mes.' +
+      '</div>';
 
 
     return;
   }
 
 
-  for (
-    var i = 0;
-    i < gastos.length;
-    i++
-  ) {
-
-    var gasto =
-      gastos[i];
+  let total =
+    0;
 
 
-    total +=
-      Number(
-        gasto.monto
-      );
+  gastos.forEach(
+    function(gasto) {
+
+      total +=
+        Number(
+          gasto.monto
+        ) || 0;
 
 
-    var partes =
-      String(
-        gasto.fecha
-      ).split("-");
+      const partes =
+        String(
+          gasto.fecha
+        ).split("-");
 
 
-    var fechaVisible =
-      partes[2] +
-      "/" +
-      partes[1] +
-      "/" +
-      partes[0];
+      const fechaVisible =
+        partes[2] +
+        "/" +
+        partes[1] +
+        "/" +
+        partes[0];
 
 
-    var fila =
-      document.createElement(
-        "div"
-      );
-
-
-    fila.className =
-      "gasto";
-
-
-    var izquierda =
-      document.createElement(
-        "div"
-      );
-
-
-    var categoria =
-      document.createElement(
-        "div"
-      );
-
-
-    categoria.className =
-      "categoria";
-
-
-    categoria.textContent =
-      gasto.categoria ||
-      "";
-
-
-    izquierda.appendChild(
-      categoria
-    );
-
-
-    if (gasto.detalle) {
-
-      var detalle =
+      const fila =
         document.createElement(
           "div"
         );
 
 
-      detalle.className =
-        "detalle";
+      fila.className =
+        "gasto";
 
 
-      detalle.textContent =
-        gasto.detalle;
+      const izquierda =
+        document.createElement(
+          "div"
+        );
+
+
+      const categoria =
+        document.createElement(
+          "div"
+        );
+
+
+      categoria.className =
+        "categoria";
+
+
+      categoria.textContent =
+        gasto.categoria || "";
 
 
       izquierda.appendChild(
-        detalle
+        categoria
+      );
+
+
+      if (gasto.detalle) {
+
+        const detalle =
+          document.createElement(
+            "div"
+          );
+
+
+        detalle.className =
+          "detalle";
+
+
+        detalle.textContent =
+          gasto.detalle;
+
+
+        izquierda.appendChild(
+          detalle
+        );
+      }
+
+
+      const info =
+        document.createElement(
+          "div"
+        );
+
+
+      info.className =
+        "info";
+
+
+      info.textContent =
+        fechaVisible +
+        " · " +
+        (
+          gasto.persona ||
+          ""
+        );
+
+
+      izquierda.appendChild(
+        info
+      );
+
+
+      const importe =
+        document.createElement(
+          "div"
+        );
+
+
+      importe.className =
+        "importe";
+
+
+      importe.textContent =
+        dinero(
+          gasto.monto
+        );
+
+
+      fila.appendChild(
+        izquierda
+      );
+
+
+      fila.appendChild(
+        importe
+      );
+
+
+      lista.appendChild(
+        fila
       );
     }
-
-
-    var info =
-      document.createElement(
-        "div"
-      );
-
-
-    info.className =
-      "info";
-
-
-    info.textContent =
-      fechaVisible +
-      " · " +
-      (
-        gasto.persona ||
-        ""
-      );
-
-
-    izquierda.appendChild(
-      info
-    );
-
-
-    var importe =
-      document.createElement(
-        "div"
-      );
-
-
-    importe.className =
-      "importe";
-
-
-    importe.textContent =
-      dinero(
-        gasto.monto
-      );
-
-
-    fila.appendChild(
-      izquierda
-    );
-
-
-    fila.appendChild(
-      importe
-    );
-
-
-    lista.appendChild(
-      fila
-    );
-  }
+  );
 
 
   document.getElementById(
