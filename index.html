@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gastos</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f5f7;
+  color: #222;
+}
+
+.app {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 5px;
+}
+
+.mes {
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.total {
+  background: white;
+  padding: 22px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+
+.total span {
+  color: #777;
+}
+
+.total h2 {
+  font-size: 32px;
+  margin: 8px 0 0;
+}
+
+.formulario {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.monto {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #222;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.gasto {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.info {
+  font-size: 14px;
+  color: #777;
+  margin-top: 5px;
+}
+
+.importe {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.vacio {
+  text-align: center;
+  color: #888;
+  padding: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>Gastos</h1>
+<div class="mes" id="mes"></div>
+
+<div class="total">
+  <span>Gastado este mes</span>
+  <h2 id="total">$0</h2>
+</div>
+
+<div class="formulario">
+
+<input
+  id="monto"
+  class="monto"
+  type="number"
+  inputmode="decimal"
+  placeholder="$ Monto"
+>
+
+<select id="categoria">
+  <option value="Supermercado">Supermercado</option>
+  <option value="Comida">Comida</option>
+  <option value="Combustible">Combustible</option>
+  <option value="Chicos">Chicos</option>
+  <option value="Salidas">Salidas</option>
+  <option value="Compras">Compras</option>
+  <option value="Casa">Casa</option>
+  <option value="Otros">Otros</option>
+</select>
+
+<input
+  id="detalle"
+  type="text"
+  placeholder="Detalle (opcional)"
+>
+
+<select id="persona">
+  <option value="Nico">Nico</option>
+  <option value="Mujer">Mujer</option>
+</select>
+
+<button onclick="guardarGasto()">Guardar gasto</button>
+
+</div>
+
+<h3>Últimos gastos</h3>
+
+<div id="lista"></div>
+
+</div>
+
+<script>
+
+let gastos = JSON.parse(localStorage.getItem("gastos")) || [];
+
+function guardarGasto() {
+
+  const monto = Number(document.getElementById("monto").value);
+  const categoria = document.getElementById("categoria").value;
+  const detalle = document.getElementById("detalle").value;
+  const persona = document.getElementById("persona").value;
+
+  if (!monto || monto <= 0) {
+    alert("Ingresá un monto");
+    return;
+  }
+
+  const gasto = {
+    id: Date.now(),
+    monto,
+    categoria,
+    detalle,
+    persona,
+    fecha: new Date().toISOString()
+  };
+
+  gastos.unshift(gasto);
+
+  localStorage.setItem("gastos", JSON.stringify(gastos));
+
+  document.getElementById("monto").value = "";
+  document.getElementById("detalle").value = "";
+
+  mostrarGastos();
+}
+
+function mostrarGastos() {
+
+  const lista = document.getElementById("lista");
+
+  const ahora = new Date();
+
+  const gastosMes = gastos.filter(g => {
+
+    const fecha = new Date(g.fecha);
+
+    return (
+      fecha.getMonth() === ahora.getMonth() &&
+      fecha.getFullYear() === ahora.getFullYear()
+    );
+
+  });
+
+  const total = gastosMes.reduce((suma, g) => suma + g.monto, 0);
+
+  document.getElementById("total").innerText =
+    total.toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0
+    });
+
+  if (gastosMes.length === 0) {
+    lista.innerHTML =
+      '<div class="vacio">Todavía no cargaron gastos este mes.</div>';
+    return;
+  }
+
+  lista.innerHTML = "";
+
+  gastosMes.forEach(g => {
+
+    const fecha = new Date(g.fecha);
+
+    const div = document.createElement("div");
+
+    div.className = "gasto";
+
+    div.innerHTML = `
+      <div>
+        <strong>${g.categoria}</strong>
+        ${g.detalle ? <div>${g.detalle}</div> : ""}
+        <div class="info">
+          ${fecha.toLocaleDateString("es-AR")} · ${g.persona}
+        </div>
+      </div>
+
+      <div class="importe">
+        ${g.monto.toLocaleString("es-AR", {
+          style: "currency",
+          currency: "ARS",
+          maximumFractionDigits: 0
+        })}
+      </div>
+    `;
+
+    lista.appendChild(div);
+  });
+}
+
+const nombreMes = new Date().toLocaleDateString("es-AR", {
+  month: "long",
+  year: "numeric"
+});
+
+document.getElementById("mes").innerText =
+  nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1);
+
+mostrarGastos();
+
+</script>
+
+</body>
+</html>
