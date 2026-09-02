@@ -100,8 +100,6 @@
       font-weight: bold;
     }
 
-    /* CORRECCIÓN FECHA IPHONE */
-
     input[type="date"] {
       -webkit-appearance: none;
       appearance: none;
@@ -159,6 +157,10 @@
       cursor: pointer;
     }
 
+    button:disabled {
+      opacity: 0.6;
+    }
+
     .btn-imprimir {
       background: #6d6d6d;
       margin-bottom: 25px;
@@ -212,7 +214,16 @@
       padding: 25px;
     }
 
-    /* IMPRESIÓN */
+    .estado {
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 15px;
+    }
+
+    .error {
+      color: #b00020;
+    }
 
     @media print {
 
@@ -226,7 +237,8 @@
       }
 
       .formulario,
-      .btn-imprimir {
+      .btn-imprimir,
+      .estado {
         display: none !important;
       }
 
@@ -256,7 +268,6 @@
       id="mes"
     ></div>
 
-
     <div class="total">
 
       <span>Gastado este mes</span>
@@ -266,7 +277,6 @@
       </h2>
 
     </div>
-
 
     <div class="formulario">
 
@@ -278,12 +288,10 @@
         placeholder="$ Monto"
       >
 
-
       <input
         id="fecha"
         type="date"
       >
-
 
       <select id="categoria">
 
@@ -321,13 +329,11 @@
 
       </select>
 
-
       <input
         id="detalle"
         type="text"
         placeholder="Detalle (opcional)"
       >
-
 
       <select id="persona">
 
@@ -341,7 +347,6 @@
 
       </select>
 
-
       <button
         id="btnGuardar"
         type="button"
@@ -351,6 +356,10 @@
 
     </div>
 
+    <div
+      id="estado"
+      class="estado"
+    ></div>
 
     <button
       class="btn-imprimir"
@@ -359,7 +368,6 @@
     >
       Imprimir / Guardar PDF
     </button>
-
 
     <h3>
       Últimos gastos
@@ -370,22 +378,29 @@
   </div>
 
 
-  <script>
+  <script type="module">
+
+    import {
+      createClient
+    } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+
+    const SUPABASE_URL =
+      "https://jzguybdxiilpglyiqzqq.supabase.co";
+
+
+    const SUPABASE_KEY =
+      "sb_publishable_znJR0UdAV3tuY4pW-oILXw_XRN9_-vI";
+
+
+    const supabase =
+      createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
 
     let gastos = [];
-
-    try {
-
-      gastos =
-        JSON.parse(
-          localStorage.getItem("gastos")
-        ) || [];
-
-    } catch (error) {
-
-      gastos = [];
-
-    }
 
 
     function formatearDinero(valor) {
@@ -439,18 +454,188 @@
     }
 
 
-    function guardarGasto() {
+    function mostrarEstado(
+      mensaje,
+      esError = false
+    ) {
+
+      const estado =
+        document.getElementById("estado");
+
+      estado.textContent =
+        mensaje;
+
+      estado.className =
+        esError
+          ? "estado error"
+          : "estado";
+
+    }
+
+
+    function obtenerInicioMes() {
+
+      const hoy =
+        new Date();
+
+      const anio =
+        hoy.getFullYear();
+
+      const mes =
+        String(
+          hoy.getMonth() + 1
+        ).padStart(2, "0");
+
+      return (
+        anio +
+        "-" +
+        mes +
+        "-01"
+      );
+
+    }
+
+
+    function obtenerInicioMesSiguiente() {
+
+      const hoy =
+        new Date();
+
+      const siguiente =
+        new Date(
+          hoy.getFullYear(),
+          hoy.getMonth() + 1,
+          1
+        );
+
+      const anio =
+        siguiente.getFullYear();
+
+      const mes =
+        String(
+          siguiente.getMonth() + 1
+        ).padStart(2, "0");
+
+      return (
+        anio +
+        "-" +
+        mes +
+        "-01"
+      );
+
+    }
+
+
+    async function cargarGastos() {
+
+      mostrarEstado(
+        "Actualizando gastos..."
+      );
+
+
+      const inicioMes =
+        obtenerInicioMes();
+
+      const inicioMesSiguiente =
+        obtenerInicioMesSiguiente();
+
+
+      const {
+        data,
+        error
+      } =
+        await supabase
+          .from("gastos")
+          .select("*")
+          .gte(
+            "fecha",
+            inicioMes
+          )
+          .lt(
+            "fecha",
+            inicioMesSiguiente
+          )
+          .order(
+            "fecha",
+            {
+              ascending: false
+            }
+          )
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          );
+
+
+      if (error) {
+
+        console.error(
+          error
+        );
+
+        mostrarEstado(
+          "No se pudieron cargar los gastos.",
+          true
+        );
+
+        return;
+
+      }
+
+
+      gastos =
+        data || [];
+
+
+      mostrarGastos();
+
+
+      mostrarEstado(
+        "Gastos actualizados"
+      );
+
+
+      setTimeout(
+        function() {
+
+          mostrarEstado("");
+
+        },
+        1500
+      );
+
+    }
+
+
+    async function guardarGasto() {
+
+      const boton =
+        document.getElementById(
+          "btnGuardar"
+        );
+
 
       const monto =
         Number(
-          document.getElementById("monto").value
+          document
+            .getElementById("monto")
+            .value
         );
 
+
       const fecha =
-        document.getElementById("fecha").value;
+        document
+          .getElementById("fecha")
+          .value;
+
 
       const categoria =
-        document.getElementById("categoria").value;
+        document
+          .getElementById("categoria")
+          .value;
+
 
       const detalle =
         document
@@ -458,8 +643,11 @@
           .value
           .trim();
 
+
       const persona =
-        document.getElementById("persona").value;
+        document
+          .getElementById("persona")
+          .value;
 
 
       if (!monto || monto <= 0) {
@@ -484,44 +672,59 @@
       }
 
 
-      const nuevoGasto = {
+      boton.disabled =
+        true;
 
-        id: Date.now(),
-
-        monto: monto,
-
-        fecha: fecha,
-
-        categoria: categoria,
-
-        detalle: detalle,
-
-        persona: persona
-
-      };
+      boton.textContent =
+        "Guardando...";
 
 
-      gastos.push(
-        nuevoGasto
+      mostrarEstado(
+        "Guardando gasto..."
       );
 
 
-      gastos.sort(
-        function(a, b) {
+      const {
+        error
+      } =
+        await supabase
+          .from("gastos")
+          .insert([
+            {
+              monto: monto,
+              fecha: fecha,
+              categoria: categoria,
+              detalle: detalle || null,
+              persona: persona
+            }
+          ]);
 
-          return (
-            convertirFecha(b.fecha) -
-            convertirFecha(a.fecha)
-          );
 
-        }
-      );
+      if (error) {
+
+        console.error(
+          error
+        );
+
+        alert(
+          "No se pudo guardar el gasto."
+        );
+
+        mostrarEstado(
+          "Error al guardar.",
+          true
+        );
 
 
-      localStorage.setItem(
-        "gastos",
-        JSON.stringify(gastos)
-      );
+        boton.disabled =
+          false;
+
+        boton.textContent =
+          "Guardar gasto";
+
+        return;
+
+      }
 
 
       document
@@ -540,7 +743,14 @@
         obtenerFechaHoy();
 
 
-      mostrarGastos();
+      await cargarGastos();
+
+
+      boton.disabled =
+        false;
+
+      boton.textContent =
+        "Guardar gasto";
 
     }
 
@@ -548,44 +758,23 @@
     function mostrarGastos() {
 
       const lista =
-        document.getElementById("lista");
-
-      const ahora =
-        new Date();
-
-
-      const gastosMes =
-        gastos.filter(
-          function(gasto) {
-
-            const fecha =
-              convertirFecha(
-                gasto.fecha
-              );
-
-            return (
-
-              fecha.getMonth() ===
-              ahora.getMonth()
-
-              &&
-
-              fecha.getFullYear() ===
-              ahora.getFullYear()
-
-            );
-
-          }
+        document.getElementById(
+          "lista"
         );
 
 
       const total =
-        gastosMes.reduce(
-          function(suma, gasto) {
+        gastos.reduce(
+          function(
+            suma,
+            gasto
+          ) {
 
             return (
               suma +
-              Number(gasto.monto)
+              Number(
+                gasto.monto
+              )
             );
 
           },
@@ -596,11 +785,13 @@
       document
         .getElementById("total")
         .textContent =
-        formatearDinero(total);
+        formatearDinero(
+          total
+        );
 
 
       if (
-        gastosMes.length === 0
+        gastos.length === 0
       ) {
 
         lista.innerHTML =
@@ -611,10 +802,11 @@
       }
 
 
-      lista.innerHTML = "";
+      lista.innerHTML =
+        "";
 
 
-      gastosMes.forEach(
+      gastos.forEach(
         function(gasto) {
 
           const fecha =
@@ -627,6 +819,7 @@
             document.createElement(
               "div"
             );
+
 
           contenedor.className =
             "gasto";
@@ -643,29 +836,37 @@
               "div"
             );
 
+
           categoria.className =
             "categoria";
 
+
           categoria.textContent =
             gasto.categoria;
+
 
           izquierda.appendChild(
             categoria
           );
 
 
-          if (gasto.detalle) {
+          if (
+            gasto.detalle
+          ) {
 
             const detalle =
               document.createElement(
                 "div"
               );
 
+
             detalle.className =
               "detalle";
 
+
             detalle.textContent =
               gasto.detalle;
+
 
             izquierda.appendChild(
               detalle
@@ -679,8 +880,10 @@
               "div"
             );
 
+
           info.className =
             "info";
+
 
           info.textContent =
             fecha.toLocaleDateString(
@@ -702,8 +905,10 @@
               "div"
             );
 
+
           importe.className =
             "importe";
+
 
           importe.textContent =
             formatearDinero(
@@ -714,6 +919,7 @@
           contenedor.appendChild(
             izquierda
           );
+
 
           contenedor.appendChild(
             importe
@@ -760,7 +966,7 @@
       );
 
 
-    mostrarGastos();
+    cargarGastos();
 
   </script>
 
