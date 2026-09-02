@@ -351,11 +351,11 @@
       const hasta = inicioMesSiguiente();
 
       const url =
-        ${SUPABASE_URL}/rest/v1/gastos +
-        ?select=* +
-        &fecha=gte.${desde} +
-        &fecha=lt.${hasta} +
-        &order=fecha.desc,created_at.desc;
+  SUPABASE_URL + "/rest/v1/gastos" +
+  "?select=*" +
+  "&fecha=gte." + desde +
+  "&fecha=lt." + hasta +
+  "&order=fecha.desc,created_at.desc";
 
       const respuesta = await fetch(
         url,
@@ -440,7 +440,7 @@
     try {
 
       const respuesta = await fetch(
-        ${SUPABASE_URL}/rest/v1/gastos,
+        SUPABASE_URL + "/rest/v1/gastos"
         {
           method: "POST",
 
