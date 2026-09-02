@@ -1,16 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+  >
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
   <title>Gastos</title>
 
   <style>
-    * { box-sizing: border-box; }
+
+    :root {
+      color-scheme: light;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: #f4f5f7;
       color: #222;
     }
@@ -21,34 +37,62 @@
       padding: 20px;
     }
 
-    h1 { margin-bottom: 5px; }
+    h1 {
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-size: 36px;
+    }
 
     .mes {
       color: #777;
       margin-bottom: 20px;
+      text-transform: capitalize;
     }
 
-    .total, .formulario {
+    .total {
       background: white;
-      padding: 20px;
+      padding: 22px;
       border-radius: 15px;
       margin-bottom: 18px;
     }
 
-    .total span { color: #777; }
+    .total span {
+      color: #777;
+      font-size: 17px;
+    }
 
     .total h2 {
       font-size: 32px;
       margin: 8px 0 0;
     }
 
-    input, select {
+    .formulario {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 18px;
+    }
+
+    input,
+    select {
+      display: block;
       width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
+      height: 54px;
+      padding: 0 14px;
+      margin: 0 0 12px 0;
+
       border: 1px solid #ddd;
       border-radius: 10px;
+
+      background: white;
+      color: #222;
+
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 16px;
+    }
+
+    input::placeholder {
+      color: #aaa;
     }
 
     .monto {
@@ -56,37 +100,104 @@
       font-weight: bold;
     }
 
-    button {
+    /* CORRECCIÓN FECHA IPHONE */
+
+    input[type="date"] {
+      -webkit-appearance: none;
+      appearance: none;
+
+      display: block;
       width: 100%;
-      padding: 15px;
-      border: none;
+      height: 54px;
+      min-height: 54px;
+
+      padding: 0 14px;
+
+      background-color: white;
+      color: #222;
+
+      border: 1px solid #ddd;
       border-radius: 10px;
-      background: #222;
-      color: white;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 10px;
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 16px;
+
+      line-height: 54px;
     }
 
-    .btn-secundario {
-      background: #666;
+    input[type="date"]::-webkit-date-and-time-value {
+      text-align: left;
+      color: #222;
+      min-height: 54px;
+      line-height: 54px;
+    }
+
+    input[type="date"]::-webkit-datetime-edit {
+      color: #222;
+      padding: 0;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      opacity: 1;
+    }
+
+    button {
+      width: 100%;
+      min-height: 54px;
+
+      padding: 15px;
+
+      border: none;
+      border-radius: 10px;
+
+      background: #222;
+      color: white;
+
+      font-size: 17px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .btn-imprimir {
+      background: #6d6d6d;
+      margin-bottom: 25px;
+    }
+
+    h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
     }
 
     .gasto {
       background: white;
+
       padding: 15px;
+
       border-radius: 12px;
       margin-bottom: 8px;
+
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
+
       gap: 15px;
+    }
+
+    .categoria {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .detalle {
+      margin-top: 4px;
+      font-size: 15px;
     }
 
     .info {
       font-size: 14px;
       color: #777;
-      margin-top: 5px;
+      margin-top: 6px;
     }
 
     .importe {
@@ -101,11 +212,9 @@
       padding: 25px;
     }
 
+    /* IMPRESIÓN */
+
     @media print {
-      .formulario,
-      .btn-secundario {
-        display: none;
-      }
 
       body {
         background: white;
@@ -116,218 +225,545 @@
         padding: 0;
       }
 
+      .formulario,
+      .btn-imprimir {
+        display: none !important;
+      }
+
+      .total {
+        border: 1px solid #ddd;
+      }
+
       .gasto {
         border: 1px solid #ddd;
         break-inside: avoid;
       }
+
     }
+
   </style>
+
 </head>
 
 <body>
 
-<div class="app">
+  <div class="app">
 
-  <h1>Gastos</h1>
-  <div class="mes" id="mes"></div>
+    <h1>Gastos</h1>
 
-  <div class="total">
-    <span>Gastado este mes</span>
-    <h2 id="total">$0</h2>
+    <div
+      class="mes"
+      id="mes"
+    ></div>
+
+
+    <div class="total">
+
+      <span>Gastado este mes</span>
+
+      <h2 id="total">
+        $0
+      </h2>
+
+    </div>
+
+
+    <div class="formulario">
+
+      <input
+        id="monto"
+        class="monto"
+        type="number"
+        inputmode="decimal"
+        placeholder="$ Monto"
+      >
+
+
+      <input
+        id="fecha"
+        type="date"
+      >
+
+
+      <select id="categoria">
+
+        <option value="Supermercado">
+          Supermercado
+        </option>
+
+        <option value="Comida">
+          Comida
+        </option>
+
+        <option value="Combustible">
+          Combustible
+        </option>
+
+        <option value="Chicos">
+          Chicos
+        </option>
+
+        <option value="Salidas">
+          Salidas
+        </option>
+
+        <option value="Compras">
+          Compras
+        </option>
+
+        <option value="Casa">
+          Casa
+        </option>
+
+        <option value="Otros">
+          Otros
+        </option>
+
+      </select>
+
+
+      <input
+        id="detalle"
+        type="text"
+        placeholder="Detalle (opcional)"
+      >
+
+
+      <select id="persona">
+
+        <option value="Nico">
+          Nico
+        </option>
+
+        <option value="Mica">
+          Mica
+        </option>
+
+      </select>
+
+
+      <button
+        id="btnGuardar"
+        type="button"
+      >
+        Guardar gasto
+      </button>
+
+    </div>
+
+
+    <button
+      class="btn-imprimir"
+      type="button"
+      onclick="window.print()"
+    >
+      Imprimir / Guardar PDF
+    </button>
+
+
+    <h3>
+      Últimos gastos
+    </h3>
+
+    <div id="lista"></div>
+
   </div>
 
-  <div class="formulario">
 
-    <input
-      id="monto"
-      class="monto"
-      type="number"
-      inputmode="decimal"
-      placeholder="$ Monto"
-    >
+  <script>
 
-    <input
-      id="fecha"
-      type="date"
-    >
+    let gastos = [];
 
-    <select id="categoria">
-      <option value="Supermercado">Supermercado</option>
-      <option value="Comida">Comida</option>
-      <option value="Combustible">Combustible</option>
-      <option value="Chicos">Chicos</option>
-      <option value="Salidas">Salidas</option>
-      <option value="Compras">Compras</option>
-      <option value="Casa">Casa</option>
-      <option value="Otros">Otros</option>
-    </select>
+    try {
 
-    <input
-      id="detalle"
-      type="text"
-      placeholder="Detalle (opcional)"
-    >
+      gastos =
+        JSON.parse(
+          localStorage.getItem("gastos")
+        ) || [];
 
-    <select id="persona">
-      <option value="Nico">Nico</option>
-      <option value="Mica">Mica</option>
-    </select>
+    } catch (error) {
 
-    <button id="btnGuardar">Guardar gasto</button>
-  </div>
+      gastos = [];
 
-  <button class="btn-secundario" onclick="window.print()">
-    Imprimir / Guardar PDF
-  </button>
-
-  <h3>Últimos gastos</h3>
-  <div id="lista"></div>
-
-</div>
-
-<script>
-  let gastos = [];
-
-  try {
-    gastos = JSON.parse(localStorage.getItem("gastos")) || [];
-  } catch (e) {
-    gastos = [];
-  }
-
-  function formatearDinero(valor) {
-    return Number(valor).toLocaleString("es-AR", {
-      style: "currency",
-      currency: "ARS",
-      maximumFractionDigits: 0
-    });
-  }
-
-  function fechaHoy() {
-    const hoy = new Date();
-    const anio = hoy.getFullYear();
-    const mes = String(hoy.getMonth() + 1).padStart(2, "0");
-    const dia = String(hoy.getDate()).padStart(2, "0");
-    return ${anio}-${mes}-${dia};
-  }
-
-  document.getElementById("fecha").value = fechaHoy();
-
-  function guardarGasto() {
-    const monto = Number(document.getElementById("monto").value);
-    const fecha = document.getElementById("fecha").value;
-    const categoria = document.getElementById("categoria").value;
-    const detalle = document.getElementById("detalle").value.trim();
-    const persona = document.getElementById("persona").value;
-
-    if (!monto || monto <= 0) {
-      alert("Ingresá un monto válido");
-      return;
     }
 
-    if (!fecha) {
-      alert("Seleccioná una fecha");
-      return;
+
+    function formatearDinero(valor) {
+
+      return Number(valor).toLocaleString(
+        "es-AR",
+        {
+          style: "currency",
+          currency: "ARS",
+          maximumFractionDigits: 0
+        }
+      );
+
     }
 
-    const nuevoGasto = {
-      id: Date.now(),
-      monto,
-      fecha,
-      categoria,
-      detalle,
-      persona
-    };
 
-    gastos.push(nuevoGasto);
+    function obtenerFechaHoy() {
 
-    gastos.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+      const hoy = new Date();
 
-    localStorage.setItem("gastos", JSON.stringify(gastos));
+      const anio =
+        hoy.getFullYear();
 
-    document.getElementById("monto").value = "";
-    document.getElementById("detalle").value = "";
-    document.getElementById("fecha").value = fechaHoy();
+      const mes =
+        String(
+          hoy.getMonth() + 1
+        ).padStart(2, "0");
 
-    mostrarGastos();
-  }
-
-  function mostrarGastos() {
-    const lista = document.getElementById("lista");
-    const ahora = new Date();
-
-    const gastosMes = gastos.filter(gasto => {
-      const fecha = new Date(gasto.fecha + "T12:00:00");
+      const dia =
+        String(
+          hoy.getDate()
+        ).padStart(2, "0");
 
       return (
-        fecha.getMonth() === ahora.getMonth() &&
-        fecha.getFullYear() === ahora.getFullYear()
+        anio +
+        "-" +
+        mes +
+        "-" +
+        dia
       );
-    });
 
-    const total = gastosMes.reduce((suma, gasto) => {
-      return suma + Number(gasto.monto);
-    }, 0);
-
-    document.getElementById("total").textContent = formatearDinero(total);
-
-    if (gastosMes.length === 0) {
-      lista.innerHTML =
-        '<div class="vacio">Todavía no cargaron gastos este mes.</div>';
-      return;
     }
 
-    lista.innerHTML = "";
 
-    gastosMes.forEach(gasto => {
-      const fecha = new Date(gasto.fecha + "T12:00:00");
+    function convertirFecha(fechaTexto) {
 
-      const div = document.createElement("div");
-      div.className = "gasto";
+      return new Date(
+        fechaTexto + "T12:00:00"
+      );
 
-      const izquierda = document.createElement("div");
+    }
 
-      const categoria = document.createElement("strong");
-      categoria.textContent = gasto.categoria;
-      izquierda.appendChild(categoria);
 
-      if (gasto.detalle) {
-        const detalle = document.createElement("div");
-        detalle.textContent = gasto.detalle;
-        izquierda.appendChild(detalle);
+    function guardarGasto() {
+
+      const monto =
+        Number(
+          document.getElementById("monto").value
+        );
+
+      const fecha =
+        document.getElementById("fecha").value;
+
+      const categoria =
+        document.getElementById("categoria").value;
+
+      const detalle =
+        document
+          .getElementById("detalle")
+          .value
+          .trim();
+
+      const persona =
+        document.getElementById("persona").value;
+
+
+      if (!monto || monto <= 0) {
+
+        alert(
+          "Ingresá un monto válido"
+        );
+
+        return;
+
       }
 
-      const info = document.createElement("div");
-      info.className = "info";
-      info.textContent =
-        fecha.toLocaleDateString("es-AR") + " · " + gasto.persona;
 
-      izquierda.appendChild(info);
+      if (!fecha) {
 
-      const importe = document.createElement("div");
-      importe.className = "importe";
-      importe.textContent = formatearDinero(gasto.monto);
+        alert(
+          "Seleccioná una fecha"
+        );
 
-      div.appendChild(izquierda);
-      div.appendChild(importe);
+        return;
 
-      lista.appendChild(div);
-    });
-  }
+      }
 
-  const fechaActual = new Date();
 
-  document.getElementById("mes").textContent =
-    fechaActual.toLocaleDateString("es-AR", {
-      month: "long",
-      year: "numeric"
-    });
+      const nuevoGasto = {
 
-  document
-    .getElementById("btnGuardar")
-    .addEventListener("click", guardarGasto);
+        id: Date.now(),
 
-  mostrarGastos();
-</script>
+        monto: monto,
+
+        fecha: fecha,
+
+        categoria: categoria,
+
+        detalle: detalle,
+
+        persona: persona
+
+      };
+
+
+      gastos.push(
+        nuevoGasto
+      );
+
+
+      gastos.sort(
+        function(a, b) {
+
+          return (
+            convertirFecha(b.fecha) -
+            convertirFecha(a.fecha)
+          );
+
+        }
+      );
+
+
+      localStorage.setItem(
+        "gastos",
+        JSON.stringify(gastos)
+      );
+
+
+      document
+        .getElementById("monto")
+        .value = "";
+
+
+      document
+        .getElementById("detalle")
+        .value = "";
+
+
+      document
+        .getElementById("fecha")
+        .value =
+        obtenerFechaHoy();
+
+
+      mostrarGastos();
+
+    }
+
+
+    function mostrarGastos() {
+
+      const lista =
+        document.getElementById("lista");
+
+      const ahora =
+        new Date();
+
+
+      const gastosMes =
+        gastos.filter(
+          function(gasto) {
+
+            const fecha =
+              convertirFecha(
+                gasto.fecha
+              );
+
+            return (
+
+              fecha.getMonth() ===
+              ahora.getMonth()
+
+              &&
+
+              fecha.getFullYear() ===
+              ahora.getFullYear()
+
+            );
+
+          }
+        );
+
+
+      const total =
+        gastosMes.reduce(
+          function(suma, gasto) {
+
+            return (
+              suma +
+              Number(gasto.monto)
+            );
+
+          },
+          0
+        );
+
+
+      document
+        .getElementById("total")
+        .textContent =
+        formatearDinero(total);
+
+
+      if (
+        gastosMes.length === 0
+      ) {
+
+        lista.innerHTML =
+          '<div class="vacio">Todavía no cargaron gastos este mes.</div>';
+
+        return;
+
+      }
+
+
+      lista.innerHTML = "";
+
+
+      gastosMes.forEach(
+        function(gasto) {
+
+          const fecha =
+            convertirFecha(
+              gasto.fecha
+            );
+
+
+          const contenedor =
+            document.createElement(
+              "div"
+            );
+
+          contenedor.className =
+            "gasto";
+
+
+          const izquierda =
+            document.createElement(
+              "div"
+            );
+
+
+          const categoria =
+            document.createElement(
+              "div"
+            );
+
+          categoria.className =
+            "categoria";
+
+          categoria.textContent =
+            gasto.categoria;
+
+          izquierda.appendChild(
+            categoria
+          );
+
+
+          if (gasto.detalle) {
+
+            const detalle =
+              document.createElement(
+                "div"
+              );
+
+            detalle.className =
+              "detalle";
+
+            detalle.textContent =
+              gasto.detalle;
+
+            izquierda.appendChild(
+              detalle
+            );
+
+          }
+
+
+          const info =
+            document.createElement(
+              "div"
+            );
+
+          info.className =
+            "info";
+
+          info.textContent =
+            fecha.toLocaleDateString(
+              "es-AR"
+            )
+            +
+            " · "
+            +
+            gasto.persona;
+
+
+          izquierda.appendChild(
+            info
+          );
+
+
+          const importe =
+            document.createElement(
+              "div"
+            );
+
+          importe.className =
+            "importe";
+
+          importe.textContent =
+            formatearDinero(
+              gasto.monto
+            );
+
+
+          contenedor.appendChild(
+            izquierda
+          );
+
+          contenedor.appendChild(
+            importe
+          );
+
+
+          lista.appendChild(
+            contenedor
+          );
+
+        }
+      );
+
+    }
+
+
+    const fechaActual =
+      new Date();
+
+
+    document
+      .getElementById("mes")
+      .textContent =
+      fechaActual.toLocaleDateString(
+        "es-AR",
+        {
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+
+    document
+      .getElementById("fecha")
+      .value =
+      obtenerFechaHoy();
+
+
+    document
+      .getElementById("btnGuardar")
+      .addEventListener(
+        "click",
+        guardarGasto
+      );
+
+
+    mostrarGastos();
+
+  </script>
 
 </body>
+
 </html>
